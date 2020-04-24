@@ -1,0 +1,769 @@
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div align="center">
+
+</div>
+<style>
+	#chart {
+	  max-width: 100%;
+	  overflow:auto;
+	}
+    .button2 {background-color: #008CBA;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin: 4px 2px;
+        cursor: pointer;}
+    #rcorners1 {
+        border-radius: 25px;
+        background: #73AD21;
+        padding: 20px; 
+        width: 800px;
+        height: 70px;  
+    }       
+
+    body {background-color: #E6E6FA;}
+
+    *{font-family: 'Roboto', sans-serif;}
+
+@keyframes click-wave {
+  0% {
+    height: 40px;
+    width: 40px;
+    opacity: 0.35;
+    position: relative;
+  }
+  100% {
+    height: 200px;
+    width: 200px;
+    margin-left: -80px;
+    margin-top: -80px;
+    opacity: 0;
+  }
+}
+
+.option-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 13.33333px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  width: 40px;
+  transition: all 0.15s ease-out 0s;
+  background: #cbd1d8;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 0.5rem;
+  outline: none;
+  position: relative;
+  z-index: 1000;
+}
+.option-input:hover {
+  background: #9faab7;
+}
+.option-input:checked {
+  background: #40e0d0;
+}
+.option-input:checked::before {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  content: '✔';
+  display: inline-block;
+  font-size: 26.66667px;
+  text-align: center;
+  line-height: 40px;
+}
+.option-input:checked::after {
+  -webkit-animation: click-wave 0.65s;
+  -moz-animation: click-wave 0.65s;
+  animation: click-wave 0.65s;
+  background: #40e0d0;
+  content: '';
+  display: block;
+  position: relative;
+  z-index: 100;
+}
+.option-input.radio {
+  border-radius: 50%;
+}
+.option-input.radio::after {
+  border-radius: 50%;
+}
+
+        
+    text {
+	  pointer-events: none;
+	}
+	.grandparent text {
+	  font-weight: bold;
+	}
+	rect {
+	  stroke: #fff;
+	  stroke-width: 1px;
+	}
+	rect.parent,
+	.grandparent rect {
+	  stroke-width: 3px;
+	}
+	.grandparent:hover rect {
+	  fill: grey;
+	}
+	.children rect.parent,
+	.grandparent rect {
+	  cursor: pointer;
+	}
+	.children rect.child {
+	  opacity: 0;
+	}
+	.children rect.parent {
+	}
+	.children:hover rect.child {
+	  opacity: 1;
+	  stroke-width: 1px;
+	}
+	.children:hover rect.parent {
+	  opacity: 0;
+	}
+	.legend {
+	  margin-bottom:8px !important;
+	}
+	.legend rect {
+	  stroke-width: 0px;
+	}
+	.legend text {
+	  text-anchor: middle;
+	  pointer-events: auto;
+	  font-size: 13px;
+	  font-family: sans-serif;
+	  fill: black;
+	}
+	.form-group {
+	    text-align:left;
+	}
+	.textdiv {
+	    font-family: "Open Sans",Helvetica,Arial,sans-serif;
+	    font-size: 14px;
+	    padding: 7px;
+	    cursor: pointer;
+	    overflow:none;
+	}
+	.textdiv .title {
+	    font-size: 102%;
+	    font-weight: bold;
+	    margin-top: 8px;
+	    font-size:11px !important;
+	}
+	.textdiv p{
+	    line-height: 13px;
+	    margin:0 0 4px !important;
+	    padding:0px;
+	    font-size:10px !important;
+    }
+    .round3 {
+        border: 4px solid black;
+        border-radius: 12px;
+    }
+    .header {
+  	padding: 20px;
+  	text-align: center;
+  	background: #1abc9c;
+  	color: white;
+  	font-size: 20px;
+  	}
+    
+
+</style>
+    <div align="center" class="header">
+        <h1 >COVID19 TREEMAP VISUALIZATION</h1>
+    <form onclick="RadioFunction()">
+  	<label><input type="radio" id="week1" name="mode" value="week1" class="option-input radio" checked> March(week1)</label>
+  	<label><input type="radio" id="week2" name="mode" value="week2" class="option-input radio" > March(week2)</label>
+	<label><input type="radio" id="week3" name="mode" value="week3" class="option-input radio" > March(week3)</label>
+    <label><input type="radio" id="week4" name="mode" value="week4" class="option-input radio" > March(week4)</label>
+    <label><input type="radio" id="week5" name="mode" value="week5" class="option-input radio" > April(week1)</label>
+    <label><input type="radio" id="week6" name="mode" value="week6" class="option-input radio" > April(week2)</label>
+   </form>	
+
+   <button  onclick="reset()" class="button2" id="rst" value="Reset">Reset</button>
+</div>
+
+    <div align = "center" id="chart" class=col-sm-8 style="padding-right:300px;"></div>
+    <div align = "center" id="bp" class=col-sm-4 style="padding-right: 200px;"></div>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script>
+        
+        
+        
+        var width = 1000,
+        height = 850, 
+        formatNumber = d3.format(","),
+        transitioning;
+        
+	
+        var x = d3.scaleLinear()
+            .domain([0, width])
+            .range([0, width]);
+        var y = d3.scaleLinear()
+            .domain([0, height])
+            .range([0, height]);
+        var treemap = d3.treemap()
+                .size([width, height])
+                .paddingInner(0)
+                .round(false);
+	var color = d3.scaleOrdinal(d3.schemeCategory20);
+	
+        var svg = d3.select("#chart").append("svg")
+	    .attr("width", width)
+            .attr("height", height+30)	
+            .append("g")
+		.attr("transform", "translate(" + 0 + "," + 30 + ")");
+                
+
+            
+        var barsvg = d3.select("#bp")
+            .append("svg")
+            .attr("width", 710)
+            .attr("height", 450)
+            .append("g")
+            .attr("transform",
+                    "translate(" + 60 + "," + 30 + ")");   
+
+        var bardsvg = d3.select("#bp")
+            .append("svg")
+            .attr("width", 710)
+            .attr("height", 450)
+            .append("g")
+            .attr("transform",
+                    "translate(" + 60 + "," + 30 + ")");  
+                          
+
+        var xAxis = barsvg.append("g")
+            .attr("transform", "translate(0," + 300 + ")")
+
+                
+        var yAxis = barsvg.append("g")
+            .attr("class", "myYaxis")
+
+        var text = barsvg.selectAll(".c1").data(['COVID19 Confirmed Cases']).enter().append('text').attr("x",40)
+            .attr("y",-5).attr("fill" ,"black").attr('stroke', 'green').attr("font-size", "25px").text(function(d,i){return d}).classed('c1', true);
+    
+
+        var xAxis1 = bardsvg.append("g")
+            .attr("transform", "translate(0," + 300 + ")")    
+
+        var yAxis1 = bardsvg.append("g")
+            .attr("class", "myYaxis1")                 
+                  
+        var text1 = bardsvg.selectAll(".c2").data(['COVID19 Deaths']).enter().append('text').attr("x",60)
+            .attr("y",-5).attr("fill" ,"black").attr('stroke', 'red').attr("font-size", "25px").text(function(d,i){return d}).classed('c2', true);    
+
+        var grandparent = svg.append("g")
+                .attr("class", "grandparent");
+
+        grandparent.append("rect")
+                .attr("y", -30)
+                .attr("width", width)
+                .attr("height", 30)
+                .attr("fill", '#bbbbbb');
+                        
+        grandparent.append("text")
+                .attr("x", 6)
+                .attr("y", 6 - 30)
+                .attr("dy", ".75em");
+
+    function reset() {
+				location.reload()
+			}        
+	    RadioFunction();	
+   function RadioFunction() {
+	    var button1 = document.getElementById("week1");
+        var button2 = document.getElementById("week2");
+	    var button3 = document.getElementById("week3");
+        var button4 = document.getElementById("week4");
+        var button5 = document.getElementById("week5");
+        var button6 = document.getElementById("week6");
+        d3.json("data.json",function(data) {
+            console.log(data);
+	    if (button1.checked){	
+            var root = d3.hierarchy(data[0]);
+            var arr = [{"name": "Asia", "death":3358},{"name": "Africa","death":5},{"name": "Europe","death":410},
+            {"name": "North America","death":21},{"name": "South America","death":59},{"name": "Oceania","death":3}]
+
+	    }
+	    else if (button2.checked){
+		    var root = d3.hierarchy(data[1]);
+            var arr = [{"name": "Asia", "death":4053},{"name": "Africa","death":12},{"name": "Europe","death":2279},
+            {"name": "North America","death":65},{"name": "South America","death":142},{"name": "Oceania","death":3}]    
+	    }
+	    else if (button3.checked){
+		    var root = d3.hierarchy(data[2]);
+            var arr = [{"name": "Asia", "death":5236},{"name": "Africa","death":57},{"name": "Europe","death":8772},
+            {"name": "North America","death":449},{"name": "South America","death":213},{"name": "Oceania","death":7}]
+	    }
+	    else if (button4.checked){
+		    var root = d3.hierarchy(data[3]);
+            var arr = [{"name": "Asia", "death":6511},{"name": "Africa","death":167},{"name": "Europe","death":24102},
+            {"name": "North America","death":2608},{"name": "South America","death":414},{"name": "Oceania","death":17}]
+	    }
+        else if (button5.checked){
+		    var root = d3.hierarchy(data[4]);
+            var arr = [{"name": "Asia", "death":8015},{"name": "Africa","death":456},{"name": "Europe","death":49156},
+            {"name": "North America","death":10096},{"name": "South America","death":1046},{"name": "Oceania","death":36}]
+	    }
+        else if (button6.checked){
+		    var root = d3.hierarchy(data[5]);
+            var arr = [{"name": "Asia", "death":9824},{"name": "Africa","death":794},{"name": "Europe","death":76743},
+            {"name": "North America","death":23284},{"name": "South America","death":2230},{"name": "Oceania","death":64}]    
+	    }					
+            console.log(root);
+            treemap(root
+                .sum(function (d) {
+                    return d.cases;
+                })
+                .sort(function (a, b) {
+                    return b.height - a.height || b.cases - a.cases
+                })
+            );
+            
+            
+            display(root);
+            function display(d) {
+                grandparent
+                    .datum(d.parent)
+                    .on("click", transition)
+                    .select("text")
+                    .text(name(d));
+                // grandparent color
+                grandparent
+                    .datum(d.parent)
+                    .select("rect")
+                    .attr("fill", function () {
+                        return '#bbbbbb';
+                    });
+                var g1 = svg.insert("g", ".grandparent")
+                    .datum(d)
+                    .attr("class", "depth");
+                var g = g1.selectAll("g")
+                    .data(d.children)
+                    .enter().
+                    append("g");
+                g.filter(function (d) {
+                    return d.children;
+                })
+                    .classed("children", true)
+                    .on("click", transition);
+                g.selectAll(".child")
+                    .data(function (d) {
+                        return d.children || [d];
+                    })
+                    .enter().append("rect")
+                    .attr("class", "child")
+                    .call(rect);
+                // add title to parents
+                g.append("rect")
+                    .attr("class", "parent")
+                    .call(rect)
+                    .append("title")
+                    .text(function (d){
+                        return d.data.name;
+                    });
+		
+        	
+
+                /* Appending foreign object for text wrapping */
+                g.append("foreignObject")
+                    .call(rect)
+                    .attr("class", "foreignobj")
+                    .append("xhtml:div")
+                    .attr("dy", ".75em").attr("font-size", "225px")
+                    .html(function (d) {if (d.children){
+                        return '' +
+                            '<p class="title"> ' + d.data.name + '</p>' +
+                            '<p>' + formatNumber(d.value) + '</p>'
+                        ;}
+			else {
+			    return '' +
+                            '<p class="title"> ' + d.data.name + '</p>' +
+                            '<p>' + formatNumber(d.data.cases) + '</p>'
+                        ;	
+			}
+                    })
+                    .attr("class", "textdiv"); 
+
+
+                    barhchart(d.children);
+                    bardhchart(arr);        
+
+                        
+                function transition(d) {
+                    if (transitioning || !d) return;
+                    transitioning = true;
+                    var g2 = display(d),
+                        tran1 = g1.transition().duration(650),
+                        tran2 = g2.transition().duration(650);
+                    
+                    x.domain([d.x0, d.x1]);
+                    y.domain([d.y0, d.y1]);
+                    
+                    svg.style("shape-rendering", null);
+                    
+                    svg.selectAll(".depth").sort(function (a, b) {
+                        return a.depth - b.depth;
+                    });
+                    
+                    g2.selectAll("text").style("fill-opacity", 0);
+                    g2.selectAll("foreignObject div").style("display", "none");
+                    
+                    
+                    tran1.selectAll("text").call(text).style("fill-opacity", 0);
+                    tran2.selectAll("text").call(text).style("fill-opacity", 1);
+                    tran1.selectAll("rect").call(rect);
+                    tran2.selectAll("rect").call(rect);
+                    
+                    tran1.selectAll(".textdiv").style("display", "none");
+                    
+                    tran1.selectAll(".foreignobj").call(foreign);
+                    
+                    tran2.selectAll(".textdiv").style("display", "block");
+                    
+                    tran2.selectAll(".foreignobj").call(foreign);
+                    
+                    // Node should be removed once transition is done.
+                    tran1.on("end.remove", function(){
+                        this.remove();
+                        transitioning = false;
+                    });
+                    console.log(d)
+
+                    if (d.height==1){
+                        barchart(d.data.children);
+                        bardchart(d.data.children);
+                    } 
+                    else if(d.height==2){
+                        barhchart(d.children);
+                        bardhchart(arr);
+                    }   
+                        
+                }
+                return g;
+            }
+            function barchart(d){
+
+                var width = 570;
+                var height = 300;
+
+                
+                var x = d3.scaleBand()
+                .range([ 0, width ])
+                .padding(1);
+
+                var y = d3.scaleLinear()
+                .range([ height, 0]);
+
+                x.domain(d.map(function(d) { return d.name; }))
+                xAxis.transition().duration(1000).call(d3.axisBottom(x)).selectAll("text")
+                            .style("text-anchor","end")
+                            .attr("dx","-.8em")
+                            .attr("dy",".15em")
+                            .attr("transform","rotate(-65)");
+
+    
+                y.domain([0, d3.max(d, function(d) { return d.cases; }) ]);
+                yAxis.transition().duration(1000).call(d3.axisLeft(y));
+                
+
+                var j = barsvg.selectAll(".myLine").data(d)
+
+                j
+                .enter()
+                .append("line")
+                .attr("class", "myLine")
+                .merge(j)
+                .transition()
+                .duration(1000)
+                .attr("x1", function(d) { return x(d.name); })
+                .attr("x2", function(d) { return x(d.name); })
+                .attr("y1", y(0))
+                .attr("y2", function(d) { return y(d.cases); })
+                .attr("stroke", "black")
+
+                j.exit().remove()
+                                                
+
+                var u = barsvg.selectAll("circle")
+                .data(d)
+    
+                u
+                .enter()
+                .append("circle")
+                .merge(u)
+                .transition()
+                .duration(1000)
+                .attr("cx", function(d) { return x(d.name); })
+                .attr("cy", function(d) { return y(d.cases); })
+                .attr("r", 5)
+                .attr("fill", "green");
+
+                
+                u.exit().remove()
+            }
+
+            function bardchart(d){
+                    
+                var width = 570;
+                var height = 300;
+
+
+                var x = d3.scaleBand()
+                .range([ 0, width ])
+                .padding(1);
+
+                var y = d3.scaleLinear()
+                .range([ height, 0]);
+
+                x.domain(d.map(function(d) { return d.name; }))
+                xAxis1.transition().duration(1000).call(d3.axisBottom(x)).selectAll("text")
+                            .style("text-anchor","end")
+                            .attr("dx","-.8em")
+                            .attr("dy",".15em")
+                            .attr("transform","rotate(-65)");
+
+                y.domain([0, d3.max(d, function(d) { return d.death; }) ]);
+                yAxis1.transition().duration(1000).call(d3.axisLeft(y)); 
+
+                var j = bardsvg.selectAll(".myLine").data(d)
+
+                j
+                .enter()
+                .append("line")
+                .attr("class", "myLine")
+                .merge(j)
+                .transition()
+                .duration(1000)
+                .attr("x1", function(d) { return x(d.name); })
+                .attr("x2", function(d) { return x(d.name); })
+                .attr("y1", y(0))
+                .attr("y2", function(d) { return y(d.death); })
+                .attr("stroke", "black")
+
+                j.exit().remove()
+                                                
+
+                var u = bardsvg.selectAll("circle")
+                .data(d)
+    
+                u
+                .enter()
+                .append("circle")
+                .merge(u)
+                .transition()
+                .duration(1000)
+                .attr("cx", function(d) { return x(d.name); })
+                .attr("cy", function(d) { return y(d.death); })
+                .attr("r", 5)
+                .attr("fill", "red");
+
+                
+                u.exit().remove()           
+                
+            }
+            function barhchart(d){
+
+                var width = 570;
+                var height = 300;
+
+                var x = d3.scaleBand()
+                .range([ 0, width ])
+                .padding(1);
+
+                var y = d3.scaleLinear()
+                .range([ height, 0]);
+
+                
+                x.domain(d.map(function(d) { return d.data.name; }))
+                xAxis.transition().duration(1000).call(d3.axisBottom(x)).selectAll("text")
+                            .style("text-anchor","end")
+                            .attr("dx","-.8em")
+                            .attr("dy",".15em")
+                            .attr("transform","rotate(-65)");
+
+
+                y.domain([0, d3.max(d, function(d) { return d.value; }) ]);
+                yAxis.transition().duration(1000).call(d3.axisLeft(y));
+
+                
+                var j = barsvg.selectAll(".myLine").data(d)
+
+                j
+                .enter()
+                .append("line")
+                .attr("class", "myLine")
+                .merge(j)
+                .transition()
+                .duration(1000)
+                .attr("x1", function(d) { return x(d.data.name); })
+                .attr("x2", function(d) { return x(d.data.name); })
+                .attr("y1", y(0))
+                .attr("y2", function(d) { return y(d.value); })
+                .attr("stroke", "black")
+
+                j.exit().remove()
+                                                
+
+                var u = barsvg.selectAll("circle")
+                .data(d)
+    
+                u
+                .enter()
+                .append("circle")
+                .merge(u)
+                .transition()
+                .duration(1000)
+                .attr("cx", function(d) { return x(d.data.name); })
+                .attr("cy", function(d) { return y(d.value); })
+                .attr("r", 5)
+                .attr("fill", "green");
+
+                u.exit().remove()
+            }
+
+            function bardhchart(d){   
+                
+                var width = 570;
+                var height = 300;
+
+
+                var x = d3.scaleBand()
+                .range([ 0, width ])
+                .padding(1);
+
+                var y = d3.scaleLinear()
+                .range([ height, 0]);
+
+                x.domain(d.map(function(d) { return d.name; }))
+                xAxis1.transition().duration(1000).call(d3.axisBottom(x)).selectAll("text")
+                            .style("text-anchor","end")
+                            .attr("dx","-.8em")
+                            .attr("dy",".15em")
+                            .attr("transform","rotate(-65)");
+
+                y.domain([0, d3.max(d, function(d) { return d.death; }) ]);
+                yAxis1.transition().duration(1000).call(d3.axisLeft(y)); 
+
+
+                var j = bardsvg.selectAll(".myLine").data(d)
+
+                j
+                .enter()
+                .append("line")
+                .attr("class", "myLine")
+                .merge(j)
+                .transition()
+                .duration(1000)
+                .attr("x1", function(d) { return x(d.name); })
+                .attr("x2", function(d) { return x(d.name); })
+                .attr("y1", y(0))
+                .attr("y2", function(d) { return y(d.death); })
+                .attr("stroke", "black")
+
+                j.exit().remove()
+                                                
+
+                var u = bardsvg.selectAll("circle")
+                .data(d)
+    
+                u
+                .enter()
+                .append("circle")
+                .merge(u)
+                .transition()
+                .duration(1000)
+                .attr("cx", function(d) { return x(d.name); })
+                .attr("cy", function(d) { return y(d.death); })
+                .attr("r", 5)
+                .attr("fill", "red");
+
+                u.exit().remove()
+            }
+
+            function text(text) {
+                text.attr("x", function (d) {
+                    return x(d.x) + 6;
+                })
+                    .attr("y", function (d) {
+                        return y(d.y) + 6;
+                    });
+            }
+            function rect(rect) {
+                rect
+                    .attr("x", function (d) {
+                        return x(d.x0);
+                    })
+                    .attr("y", function (d) {
+                        return y(d.y0);
+                    })
+                    .attr("width", function (d) {
+                        return x(d.x1) - x(d.x0);
+                    })
+                    .attr("height", function (d) {
+                        return y(d.y1) - y(d.y0);
+                    })
+                    .attr("fill", function (d) { if (d.children){ return color(d.data.name);}
+                        else {return color(d.name);}
+                    });
+            }
+            function foreign(foreign) { 
+                //rf:embed.plnkr.co/
+                foreign
+                    .attr("x", function (d) {
+                        return x(d.x0);
+                    })
+                    .attr("y", function (d) {
+                        return y(d.y0);
+                    })
+                    .attr("width", function (d) {
+                        return x(d.x1) - x(d.x0);
+                    })
+                    .attr("height", function (d) {
+                        return y(d.y1) - y(d.y0);
+                    });
+            }
+            function name(d) {
+                return breadcrumbs(d) +
+                    (d.parent
+                    ? " -  Click here to zoom out"
+                    : " - Click on continent to zoom in");
+            }
+            function breadcrumbs(d) {
+                var res = "";
+                var sep = " > ";
+                d.ancestors().reverse().forEach(function(i){
+                    res += i.data.name + sep;
+                });
+                return res
+                    .split(sep)
+                    .filter(function(i){
+                        return i!== "";
+                    })
+                    .join(sep);
+            }
+            
+        });}
+    </script>
